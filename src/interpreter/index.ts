@@ -34,11 +34,16 @@ class EmojifuckInterpreterImpl implements EmojifuckInterpreter {
     this.config = props.config ?? this.config;
   }
 
+  private get current() {
+    return this.program[this.state.ipointer];
+  }
+
   public interpret(program: string) {
     this.reset(program);
 
-    while (this.program[this.state.ipointer]) {
-      this.interpretSymbol();
+    while (this.current) {
+      this.interpretSymbol(this.current);
+      this.movePointerForward();
     }
 
     return this.state.output;
@@ -56,60 +61,39 @@ class EmojifuckInterpreterImpl implements EmojifuckInterpreter {
     };
   }
 
-  private interpretSymbol() {
-    switch (this.program[this.state.ipointer]) {
-      case this.config.alphabet['>']: {
-        this.handleNext();
-
-        break;
-      }
+  private interpretSymbol(symbol: string) {
+    switch (symbol) {
+      case this.config.alphabet['>']:
+        return this.handleNext();
 
       case this.config.alphabet['<']:
-        this.handlePrev();
-
-        break;
+        return this.handlePrev();
 
       case this.config.alphabet['+']:
-        this.handleAdd();
-
-        break;
+        return this.handleAdd();
 
       case this.config.alphabet['-']:
-        this.handleSub();
-
-        break;
+        return this.handleSub();
 
       case this.config.alphabet['.']:
-        this.handleSet();
-
-        break;
+        return this.handleSet();
 
       case this.config.alphabet[',']:
-        this.handleGet();
-
-        break;
+        return this.handleGet();
 
       case this.config.alphabet['[']:
-        this.handleLoopStart();
-
-        break;
+        return this.handleLoopStart();
 
       case this.config.alphabet[']']:
-        this.handleLoopEnd();
-
-        break;
+        return this.handleLoopEnd();
 
       default:
-        this.handleDefault();
-
-        break;
+        return this.handleDefault();
     }
-
-    this.next();
   }
 
-  private next() {
-    this.state.ipointer += 1;
+  private movePointerForward() {
+    return (this.state.ipointer += 1);
   }
 
   private handleNext() {
@@ -117,61 +101,66 @@ class EmojifuckInterpreterImpl implements EmojifuckInterpreter {
       this.state.memory.push(0, 0, 0, 0, 0);
     }
 
-    this.state.mpointer++;
+    return (this.state.mpointer += 1);
   }
 
   private handlePrev() {
     if (this.state.mpointer > 0) {
-      this.state.mpointer--;
+      this.state.mpointer -= 1;
     }
+
+    return this.state.mpointer;
   }
 
   private handleAdd() {
-    this.state.memory[this.state.mpointer]++;
+    return (this.state.memory[this.state.mpointer] += 1);
   }
 
   private handleSub() {
-    this.state.memory[this.state.mpointer]--;
+    return (this.state.memory[this.state.mpointer] -= 1);
   }
 
   private handleSet() {
-    this.state.output += String.fromCharCode(
+    return (this.state.output += String.fromCharCode(
       this.state.memory[this.state.mpointer],
-    );
+    ));
   }
 
   private handleGet() {
-    this.state.memory[this.state.mpointer] = 0;
+    return (this.state.memory[this.state.mpointer] = 0);
   }
 
   private handleLoopStart() {
     if (this.state.memory[this.state.mpointer]) {
-      // If non-zero
-      this.state.astack.push(this.state.ipointer);
-    } else {
-      // Skip to matching right bracket
-      let count = 0;
-
-      while (true) {
-        this.state.ipointer++;
-        if (!this.program[this.state.ipointer]) break;
-
-        if (this.program[this.state.ipointer] === '[') count++;
-        else if (this.program[this.state.ipointer] === ']') {
-          if (count) count--;
-          else break;
-        }
-      }
+      return this.state.astack.push(this.state.ipointer);
     }
+
+    let count = 0;
+
+    do {
+      this.state.ipointer += 1;
+
+      switch (this.current) {
+        case this.config.alphabet['[']:
+          count += 1;
+          break;
+        case this.config.alphabet[']']: {
+          if (count) count -= 1;
+          else return count;
+          break;
+        }
+        default:
+          break;
+      }
+    } while (this.current);
   }
 
   private handleLoopEnd() {
-    //Pointer is automatically incremented every iteration, therefore we must decrement to get the correct value
-    this.state.ipointer = this.state.astack.pop() - 1;
+    return (this.state.ipointer = this.state.astack.pop() - 1);
   }
 
   private handleDefault() {
-    // We ignore any character that are not part of regular Brainfuck syntax
+    return;
   }
 }
 

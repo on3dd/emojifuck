@@ -22,15 +22,17 @@ declare module '@emojifuck' {
 
   export interface EmojifuckInterpreterConfig {
     size?: number;
-    alphabet?: {
-      '>': string;
-      '<': string;
-      '+': string;
-      '-': string;
-      '.': string;
-      ',': string;
-      '[': string;
-      ']': string;
-    };
+    alphabet?: EmojifuckInterpreterAlphabet;
+  }
+
+  export interface EmojifuckInterpreterAlphabet {
+    '>': string;
+    '<': string;
+    '+': string;
+    '-': string;
+    '.': string;
+    ',': string;
+    '[': string;
+    ']': string;
   }
 }
