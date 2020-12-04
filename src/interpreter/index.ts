@@ -1,37 +1,9 @@
-type EmojifuckInterpreterProgram = string;
-
-interface EmojifuckInterpreterConstructor {
-  config?: EmojifuckInterpreterConfig;
-}
-
-interface EmojifuckInterpreter
-  extends EmojifuckInterpreterConstructor {
-  program: EmojifuckInterpreterProgram;
-  state: EmojifuckInterpreterState;
-  config: EmojifuckInterpreterConfig;
-}
-
-interface EmojifuckInterpreterState {
-  output: string;
-  ipointer: number;
-  mpointer: number;
-  astack: number[];
-  memory: number[];
-}
-
-interface EmojifuckInterpreterConfig {
-  size?: number;
-  alphabet?: {
-    '>': string;
-    '<': string;
-    '+': string;
-    '-': string;
-    '.': string;
-    ',': string;
-    '[': string;
-    ']': string;
-  };
-}
+import {
+  EmojifuckInterpreter,
+  EmojifuckInterpreterState,
+  EmojifuckInterpreterConfig,
+  EmojifuckInterpreterConstructor,
+} from '@emojifuck';
 
 class EmojifuckInterpreterImpl implements EmojifuckInterpreter {
   public program: string = '';
@@ -66,55 +38,7 @@ class EmojifuckInterpreterImpl implements EmojifuckInterpreter {
     this.reset(program);
 
     while (this.program[this.state.ipointer]) {
-      switch (this.program[this.state.ipointer]) {
-        case this.config.alphabet['>']: {
-          this.handleNext();
-
-          break;
-        }
-
-        case this.config.alphabet['<']:
-          this.handlePrev();
-
-          break;
-
-        case this.config.alphabet['+']:
-          this.handleAdd();
-
-          break;
-
-        case this.config.alphabet['-']:
-          this.handleSub();
-
-          break;
-
-        case this.config.alphabet['.']:
-          this.handleSet();
-
-          break;
-
-        case this.config.alphabet[',']:
-          this.handleGet();
-
-          break;
-
-        case this.config.alphabet['[']:
-          this.handleLoopStart();
-
-          break;
-
-        case this.config.alphabet[']']:
-          this.handleLoopEnd();
-
-          break;
-
-        default:
-          this.handleDefault();
-
-          break;
-      }
-
-      this.next();
+      this.interpretSymbol();
     }
 
     return this.state.output;
@@ -130,6 +54,58 @@ class EmojifuckInterpreterImpl implements EmojifuckInterpreter {
       astack: new Array<number>(),
       memory: new Array<number>(this.config.size).fill(0),
     };
+  }
+
+  private interpretSymbol() {
+    switch (this.program[this.state.ipointer]) {
+      case this.config.alphabet['>']: {
+        this.handleNext();
+
+        break;
+      }
+
+      case this.config.alphabet['<']:
+        this.handlePrev();
+
+        break;
+
+      case this.config.alphabet['+']:
+        this.handleAdd();
+
+        break;
+
+      case this.config.alphabet['-']:
+        this.handleSub();
+
+        break;
+
+      case this.config.alphabet['.']:
+        this.handleSet();
+
+        break;
+
+      case this.config.alphabet[',']:
+        this.handleGet();
+
+        break;
+
+      case this.config.alphabet['[']:
+        this.handleLoopStart();
+
+        break;
+
+      case this.config.alphabet[']']:
+        this.handleLoopEnd();
+
+        break;
+
+      default:
+        this.handleDefault();
+
+        break;
+    }
+
+    this.next();
   }
 
   private next() {
