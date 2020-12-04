@@ -141,22 +141,29 @@ class EmojifuckInterpreterImpl implements EmojifuckInterpreter {
       this.state.ipointer += 1;
 
       switch (this.current) {
-        case this.config.alphabet['[']:
+        case this.config.alphabet['[']: {
           count += 1;
           break;
+        }
+
         case this.config.alphabet[']']: {
-          if (count) count -= 1;
-          else return count;
+          if (count === 0) {
+            return;
+          }
+
+          count -= 1;
           break;
         }
-        default:
+
+        default: {
           break;
+        }
       }
     } while (this.current);
   }
 
   private handleLoopEnd() {
-    return (this.state.ipointer = this.state.astack.pop() - 1);
+    this.state.ipointer = this.state.astack.pop() - 1;
   }
 
   private handleDefault() {
