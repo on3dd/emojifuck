@@ -1,6 +1,11 @@
 declare module '@emojifuck' {
   export type EmojifuckInterpreterProgram = string[];
 
+  export interface EmojifuckSampleProgram {
+    name: string;
+    code: string;
+  }
+
   export interface EmojifuckInterpreterConstructor {
     config?: EmojifuckInterpreterConfig;
   }
@@ -10,6 +15,8 @@ declare module '@emojifuck' {
     program: EmojifuckInterpreterProgram;
     state: EmojifuckInterpreterState;
     config: EmojifuckInterpreterConfig;
+
+    interpret: (code: string) => string;
   }
 
   export interface EmojifuckInterpreterState {
@@ -34,5 +41,17 @@ declare module '@emojifuck' {
     ',': string;
     '[': string;
     ']': string;
+  }
+
+  export interface EmojifuckFormatterConstructor {
+    config?: EmojifuckInterpreterConfig;
+  }
+
+  export interface EmojifuckFormatter
+    extends EmojifuckFormatterConstructor {
+    config: EmojifuckInterpreterConfig;
+    interpreter: EmojifuckInterpreter;
+
+    print: (code: EmojifuckSampleProgram) => void;
   }
 }

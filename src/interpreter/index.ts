@@ -5,6 +5,7 @@ import {
   EmojifuckInterpreterState,
   EmojifuckInterpreterConfig,
   EmojifuckInterpreterConstructor,
+  EmojifuckInterpreterProgram,
   EmojifuckInterpreterAlphabet,
 } from '@emojifuck';
 
@@ -35,9 +36,6 @@ class EmojifuckInterpreterImpl implements EmojifuckInterpreter {
     this.reset(program);
 
     while (this.current) {
-      // console.log('----------------------');
-      // console.log('current', this.current);
-
       this.interpretSymbol(this.current);
       this.movePointerForward();
     }
@@ -47,8 +45,6 @@ class EmojifuckInterpreterImpl implements EmojifuckInterpreter {
 
   private reset(program: string) {
     this.program = this.splitter.splitGraphemes(program);
-
-    // console.log('this.program', this.program.join());
 
     this.state = {
       output: '',
@@ -99,8 +95,6 @@ class EmojifuckInterpreterImpl implements EmojifuckInterpreter {
   }
 
   private handleNext() {
-    // console.log(this.handleNext.name);
-
     if (this.state.mpointer == this.state.memory.length - 1) {
       this.state.memory.push(0, 0, 0, 0, 0);
     }
@@ -109,8 +103,6 @@ class EmojifuckInterpreterImpl implements EmojifuckInterpreter {
   }
 
   private handlePrev() {
-    // console.log(this.handlePrev.name);
-
     if (this.state.mpointer > 0) {
       this.state.mpointer -= 1;
     }
@@ -119,34 +111,24 @@ class EmojifuckInterpreterImpl implements EmojifuckInterpreter {
   }
 
   private handleAdd() {
-    // console.log(this.handleAdd.name);
-
     return (this.state.memory[this.state.mpointer] += 1);
   }
 
   private handleSub() {
-    // console.log(this.handleSub.name);
-
     return (this.state.memory[this.state.mpointer] -= 1);
   }
 
   private handleSet() {
-    // console.log(this.handleSet.name);
-
     return (this.state.output += String.fromCharCode(
       this.state.memory[this.state.mpointer],
     ));
   }
 
   private handleGet() {
-    // console.log(this.handleGet.name);
-
     return (this.state.memory[this.state.mpointer] = 0);
   }
 
   private handleLoopStart() {
-    // console.log(this.handleLoopStart.name);
-
     if (this.state.memory[this.state.mpointer]) {
       return this.state.astack.push(this.state.ipointer);
     }
@@ -179,15 +161,11 @@ class EmojifuckInterpreterImpl implements EmojifuckInterpreter {
   }
 
   private handleLoopEnd() {
-    // console.log(this.handleLoopEnd.name);
-
     this.state.ipointer = this.state.astack.pop() - 1;
   }
 
   private handleDefault() {
     if (!this.current) return;
-
-    // console.log(this.handleDefault.name);
   }
 }
 
