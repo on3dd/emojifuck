@@ -1,5 +1,5 @@
 declare module '@emojifuck' {
-  export type EmojifuckInterpreterProgram = string;
+  export type EmojifuckInterpreterProgram = string[];
 
   export interface EmojifuckInterpreterConstructor {
     config?: EmojifuckInterpreterConfig;
@@ -21,8 +21,8 @@ declare module '@emojifuck' {
   }
 
   export interface EmojifuckInterpreterConfig {
-    size?: number;
-    alphabet?: EmojifuckInterpreterAlphabet;
+    size: number;
+    alphabet: EmojifuckInterpreterAlphabet;
   }
 
   export interface EmojifuckInterpreterAlphabet {

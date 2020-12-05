@@ -5,8 +5,10 @@
     }
   },
   "compilerOptions": {
-    "target": "es6",
-    "moduleResolution": "node"
+    "target": "esnext",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true
   },
   "exclude": ["node_modules"]
 }
