@@ -3,7 +3,7 @@
 
 ## Things to be done ✔️
 - [x] Create the interpreter itsefl
-- [ ] Create a validator for configs
+- [x] Create a validator for configs
 - [ ] Write some tests for both of them
 
 ## Project setup 🔧
