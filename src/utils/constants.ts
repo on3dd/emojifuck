@@ -27,3 +27,7 @@ export const DEFAULT_CONFIG: EmojifuckInterpreterConfig = {
     ']': ']',
   },
 };
+
+export const ALPHABET_LENGTH: number = Object.keys(
+  DEFAULT_CONFIG.alphabet,
+).length;
