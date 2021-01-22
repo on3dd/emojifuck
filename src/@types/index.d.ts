@@ -52,6 +52,7 @@ declare module '@emojifuck' {
     config: EmojifuckInterpreterConfig;
     interpreter: EmojifuckInterpreter;
 
+    format: (program: string) => string;
     print: (code: EmojifuckSampleProgram) => void;
   }
 }

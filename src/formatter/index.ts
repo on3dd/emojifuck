@@ -7,7 +7,6 @@ import {
 
 import EmojifuckInterpreterImpl from '../interpreter';
 
-import { format } from '../utils/functions';
 import { DEFAULT_CONFIG } from '../utils/constants';
 
 class EmojifuckFormatterImlp implements EmojifuckFormatter {
@@ -22,15 +21,25 @@ class EmojifuckFormatterImlp implements EmojifuckFormatter {
     });
   }
 
-  public print(sample: EmojifuckSampleProgram) {
+  public format = (program: string): string => {
+    return Object.entries(this.config.alphabet).reduce(
+      (prev, curr) => {
+        const regex = new RegExp(`\\${curr[0]}`, 'g');
+        return prev.replace(regex, curr[1]);
+      },
+      program,
+    );
+  };
+
+  public print = (sample: EmojifuckSampleProgram): void => {
     console.log(`original ${sample.name}: ${sample.code}`);
 
-    const formatted = format(sample.code, this.config);
+    const formatted = this.format(sample.code);
     console.log(`formated ${sample.name}: ${formatted}`);
 
     const interpreted = this.interpreter.interpret(formatted);
     console.log(`interpreted ${sample.name}: ${interpreted}`);
-  }
+  };
 }
 
 export default EmojifuckFormatterImlp;
