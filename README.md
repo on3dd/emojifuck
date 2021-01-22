@@ -4,7 +4,8 @@
 ## Things to be done ✔️
 - [x] Create the interpreter itsefl
 - [x] Create a validator for configs
-- [ ] Write some tests for both of them
+- [x] Write some tests for both of them 
+- [ ] Dockerize and publish final app
 
 ## Project setup 🔧
 ### 1. Install dependencies
