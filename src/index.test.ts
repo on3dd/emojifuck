@@ -1,5 +1,8 @@
 import { EmojifuckInterpreterConfig } from '@emojifuck';
 
+import EmojifuckFormatterImpl from './formatter';
+import EmojifuckInterpreterImpl from './interpreter';
+
 import { validate } from './utils/functions';
 import { HELLO_WORLD, FIBONACCI } from './utils/samples';
 
@@ -16,6 +19,14 @@ const DEFAULT_CONFIG: EmojifuckInterpreterConfig = {
     ']': '🕺',
   },
 };
+
+const formatter = new EmojifuckFormatterImpl({
+  config: DEFAULT_CONFIG,
+});
+
+const interpreter = new EmojifuckInterpreterImpl({
+  config: DEFAULT_CONFIG,
+});
 
 describe('Validator tests', () => {
   test('config.size is undefined', () => {
@@ -86,5 +97,23 @@ describe('Validator tests', () => {
         }),
       );
     }).toThrowError();
+  });
+});
+
+describe('Interpreter tests', () => {
+  test('hello world', () => {
+    const formatted = formatter.format(HELLO_WORLD.code);
+
+    const result = interpreter.interpret(formatted);
+
+    expect(result).toMatch(/Hello World!/);
+  });
+
+  test('fibonacci', () => {
+    const formatted = formatter.format(FIBONACCI.code);
+
+    const result = interpreter.interpret(formatted);
+
+    expect(result).toMatch(/1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89/);
   });
 });
