@@ -12,7 +12,7 @@ export const validate = (
 
   if (!config.alphabet)
     throw new Error(
-      'Validation error: config.alphabet must be prodivev!',
+      'Validation error: config.alphabet must be provided!',
     );
 
   if (Object.keys(config.alphabet).length !== ALPHABET_LENGTH)
